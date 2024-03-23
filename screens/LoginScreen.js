@@ -1,7 +1,25 @@
 import AuthContent from '../components/Auth/AuthContent';
+import LoadingOverlay from '../components/ui/LoadingOverlay';
+import { useAuthenthication } from '../hooks/useAuthentication';
 
-function LoginScreen() {
-  return <AuthContent isLogin />;
+function LoginScreen({ navigation }) {
+  const { isAuthenticated, isFetching, signInUser } = useAuthenthication();
+
+  console.log('autenticado', isAuthenticated);
+
+  const handleSwitchAuthMode = () => {
+    navigation.replace('Signup');
+  };
+
+  const _loadingTpl = () => {
+    return <LoadingOverlay message="Loading..." />;
+  };
+
+  if (isFetching) return _loadingTpl();
+
+  return (
+    <AuthContent isLogin onSwitchAuthMode={handleSwitchAuthMode} onAuthenticate={signInUser} />
+  );
 }
 
 export default LoginScreen;
