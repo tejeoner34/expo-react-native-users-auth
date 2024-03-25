@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
+import * as SplashScreen from 'expo-splash-screen';
 
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
@@ -10,8 +11,10 @@ import { Colors } from './constants/styles';
 import AuthContextProvider from './store/authContext';
 import IconButton from './components/ui/IconButton';
 import { useAuthenthication } from './hooks/useAuthentication';
+import { useEffect, useState } from 'react';
 
 const Stack = createNativeStackNavigator();
+SplashScreen.preventAutoHideAsync();
 
 function AuthStack() {
   return (
@@ -53,7 +56,19 @@ function AuthenticatedStack() {
 }
 
 function Navigation() {
-  const { isAuthenticated } = useAuthenthication();
+  const { isAuthenticated, checkIsAuthenticated } = useAuthenthication();
+  const [isAppReady, setIsAppReady] = useState(false);
+
+  useEffect(() => {
+    checkIsAuthenticated().then(() => {
+      setIsAppReady(true);
+    });
+    checkIsAuthenticated();
+  }, []);
+
+  if (isAppReady) {
+    SplashScreen.hideAsync();
+  }
   return (
     <NavigationContainer>
       {isAuthenticated ? <AuthenticatedStack /> : <AuthStack />}

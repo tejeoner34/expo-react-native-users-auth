@@ -3,9 +3,7 @@ import LoadingOverlay from '../components/ui/LoadingOverlay';
 import { useAuthenthication } from '../hooks/useAuthentication';
 
 function LoginScreen({ navigation }) {
-  const { isAuthenticated, isFetching, signInUser } = useAuthenthication();
-
-  console.log('autenticado', isAuthenticated);
+  const { isFetching, signInUser } = useAuthenthication();
 
   const handleSwitchAuthMode = () => {
     navigation.replace('Signup');
